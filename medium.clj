@@ -254,3 +254,39 @@
 (= :vector (black-box-testing [1 2 3 4 5 6]))
 (= :set (black-box-testing #{10 (rand-int 5)}))
 (= [:map :set :vector :list] (map black-box-testing [{} #{} [] ()]))
+
+
+; intro-to-trampoline
+
+; The trampoline function takes a function f and a variable number of parameters.
+; Trampoline calls f with any parameters that were supplied. If f returns a function,
+; trampoline calls that function with no arguments. This is repeated, until the return
+; value is not a function, and then trampoline returns that non-function value.
+; This is useful for implementing mutually recursive algorithms in a way that won't consume the stack.
+
+(= [1 3 5 7 9 11]
+   (letfn
+     [(foo [x y] #(bar (conj x y) y))
+      (bar [x y] (if (> (last x) 10)
+                   x
+                   #(foo x (+ 2 y))))]
+     (trampoline foo [] 1)))
+
+
+; anagram-finder
+
+; Write a function which finds all the anagrams in a vector of words. A word x is an anagram of word y if all the letters in x can be rearranged
+; in a different order to form y. Your function should return a set of sets, where each sub-set is a group of words which are anagrams of each other.
+; Each sub-set should have at least two words. Words without any anagrams should not be included in the result.
+
+(defn anagram-finder [xs]
+  (->> (vals (group-by sort xs))
+       (filter #(> (count %) 1))
+       (map set)
+       (set)))
+
+(= (anagram-finder ["meat" "mat" "team" "mate" "eat"])
+   #{#{"meat" "team" "mate"}})
+(= (anagram-finder ["veer" "lake" "item" "kale" "mite" "ever"])
+   #{#{"veer" "ever"} #{"lake" "kale"} #{"mite" "item"}})
+

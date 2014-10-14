@@ -290,3 +290,21 @@
 (= (anagram-finder ["veer" "lake" "item" "kale" "mite" "ever"])
    #{#{"veer" "ever"} #{"lake" "kale"} #{"mite" "item"}})
 
+
+; sequence-reductions
+
+; Write a function which behaves like reduce, but returns each intermediate value of the reduction.
+; Your function must accept either two or three arguments, and the return sequence must be lazy.
+; Special Restrictions - reductions
+
+(defn sequence-reductions
+  ([f xs]
+    (sequence-reductions f (first xs) (rest xs)))
+  ([f x xs]
+    (lazy-seq
+      (cons x
+        (if (empty? xs) [] (sequence-reductions f (f x (first xs)) (rest xs)))))))
+
+(= (take 5 (sequence-reductions + (range))) [0 1 3 6 10])
+(= (sequence-reductions conj [1] [2 3 4]) [[1] [1 2] [1 2 3] [1 2 3 4]])
+(= (last (sequence-reductions * 2 [3 4 5])) (reduce * 2 [3 4 5]) 120)

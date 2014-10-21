@@ -330,3 +330,21 @@
    {1 7, 2 10, 3 15})
 (= (merge-with-a-function concat {:a [3], :b [6]} {:a [4 5], :c [8 9]} {:b [7]})
    {:a [3 4 5], :b [6 7], :c [8 9]})
+
+
+; into-camel-case
+
+; When working with java, you often need to create an object with fieldsLikeThis, but you'd rather work with a hashmap that has :keys-like-this until it's time to convert. Write a function which takes lower-case hyphen-separated strings and converts them to camel-case strings.
+
+(defn into-camel-case [xs]
+  (let [split-xs (clojure.string/split xs #"-")]
+    (->> (rest split-xs)
+         (map clojure.string/capitalize)
+         (cons (first split-xs))
+         (apply str))))
+
+(= (into-camel-case "something") "something")
+(= (into-camel-case "multi-word-key") "multiWordKey")
+(= (into-camel-case "leaveMeAlone") "leaveMeAlone")
+
+

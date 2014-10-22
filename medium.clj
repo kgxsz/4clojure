@@ -334,7 +334,9 @@
 
 ; into-camel-case
 
-; When working with java, you often need to create an object with fieldsLikeThis, but you'd rather work with a hashmap that has :keys-like-this until it's time to convert. Write a function which takes lower-case hyphen-separated strings and converts them to camel-case strings.
+; When working with java, you often need to create an object with fieldsLikeThis, but you'd rather work with a hashmap that
+; has :keys-like-this until it's time to convert. Write a function which takes lower-case hyphen-separated strings
+; and converts them to camel-case strings.
 
 (defn into-camel-case [xs]
   (let [split-xs (clojure.string/split xs #"-")]
@@ -348,3 +350,35 @@
 (= (into-camel-case "leaveMeAlone") "leaveMeAlone")
 
 
+; happy-numbers
+
+; Happy numbers are positive integers that follow a particular formula: take each individual digit, square it,
+; and then sum the squares to get a new number. Repeat with the new number and eventually,
+; you might get to a number whose squared sum is 1. This is a happy number. An unhappy number
+; (or sad number) is one that loops endlessly. Write a function that determines if a number is happy or not.
+
+(defn happy-numbers [x]
+  (letfn [(happy [xs]
+            (apply + (for [i (str xs)]
+                       (#(* % %) (Integer/parseInt (str i))))))
+          (happy? [s x]
+            (cond
+              (= x 1) true
+              (contains? s x) false
+              :else (recur (conj s x) (happy x))))]
+    (happy? #{} x))
+
+  #_(let [summed-square-digits (fn [y]
+                               (->> (re-seq  #"\d" (str y))
+                                    (map #(Integer/parseInt %))
+                                    (map #(* % %))
+                                    (reduce +)))
+        result (nth (iterate summed-square-digits x) 10)]
+    (if (= 1 result)
+        true
+        false)))
+
+(= (happy-numbers 7) true)
+(= (happy-numbers 986543210) true)
+(= (happy-numbers 2) false)
+(= (happy-numbers 3) false)

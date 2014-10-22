@@ -382,3 +382,24 @@
 (= (happy-numbers 986543210) true)
 (= (happy-numbers 2) false)
 (= (happy-numbers 3) false)
+
+
+; eulers-totient-function
+
+; Two numbers are coprime if their greatest common divisor equals 1. Euler's totient function f(x) is defined as the
+; number of positive integers less than x which are coprime to x. The special case f(1) equals 1. Write a function
+; which calculates Euler's totient function.
+
+(defn eulers-totient-function [x]
+  (letfn [(gcd [a b] (if (zero? b) a (recur b (mod a b))))]
+    (->> (map #(gcd % x) (range 1 (inc x)))
+         (filter #{1})
+         (count))))
+
+(= (eulers-totient-function 1) 1)
+(= (eulers-totient-function 10) (count '(1 3 7 9)) 4)
+(= (eulers-totient-function 40) 16)
+(= (eulers-totient-function 99) 60)
+
+
+

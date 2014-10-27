@@ -402,4 +402,24 @@
 (= (eulers-totient-function 99) 60)
 
 
+; power-set
+
+; Write a function which generates the power set of a given set. The power set of a set x is the set of all
+; subsets of x, including the empty set and x itself.
+
+(defn power-set [xs]
+  (let [n (count xs)
+        range-combinations (range (Math/pow 2 n))
+        decimal->binary (partial clojure.pprint/cl-format nil "~v,'0B" n)]
+    (set (for [y (map decimal->binary range-combinations)]
+           (->> (map vector y xs)
+                (filter #(= \1 (first %)))
+                (map #(second %))
+                (set))))))
+
+(= (power-set #{1 :a}) #{#{1 :a} #{:a} #{} #{1}})
+(= (power-set #{}) #{#{}})
+(= (power-set #{1 2 3})
+      #{#{} #{1} #{2} #{3} #{1 2} #{1 3} #{2 3} #{1 2 3}})
+(= (count (power-set (into #{} (range 10)))) 1024)
 

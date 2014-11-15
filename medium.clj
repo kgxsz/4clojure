@@ -423,3 +423,27 @@
       #{#{} #{1} #{2} #{3} #{1 2} #{1 3} #{2 3} #{1 2 3}})
 (= (count (power-set (into #{} (range 10)))) 1024)
 
+
+; the-balance-of-n
+
+; A balanced number is one whose component digits have the same sum on the left and right halves of the number.
+; Write a function which accepts an integer n, and returns true iff n is balanced.
+
+(defn the-balance-of-n [n]
+  (let [seq-n (map int (str n))
+        halve #(int (/ % 2))
+        len (count seq-n)
+        half-len (halve len)]
+    (->> [(take half-len seq-n) (take-last half-len seq-n)]
+         (map #(reduce + %))
+         (apply =))))
+
+(= true (the-balance-of-n 11))
+(= true (the-balance-of-n 121))
+(= false (the-balance-of-n 123))
+(= true (the-balance-of-n 0))
+(= false (the-balance-of-n 88099))
+(= true (the-balance-of-n 89098))
+(= true (the-balance-of-n 89089))
+(= (take 20 (filter the-balance-of-n (range)))
+      [0 1 2 3 4 5 6 7 8 9 11 22 33 44 55 66 77 88 99 101])

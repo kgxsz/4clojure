@@ -447,3 +447,30 @@
 (= true (the-balance-of-n 89089))
 (= (take 20 (filter the-balance-of-n (range)))
       [0 1 2 3 4 5 6 7 8 9 11 22 33 44 55 66 77 88 99 101])
+
+
+; digits-and-bases
+
+; Write a function which returns a sequence of digits of a non-negative number (first argument) in numerical
+; system with an arbitrary base (second argument). Digits should be represented with their integer values, e.g. 15
+; would be [1 5] in base 10, [1 1 1 1] in base 2 and [15] in base 16.
+
+(defn digits-and-bases [n b]
+  (if (< n b) [n] (conj (digits-and-bases (quot n b) b) (mod n b)))
+  #_(let [powers (->> (iterate #(* b %) 1)
+                    (take-while #(<= % n))
+                    reverse)
+        initial-payload {:remaining n
+                         :result []}
+        update-payload (fn [{:keys [remaining result]} power]
+                         {:remaining (rem remaining power)
+                          :result (conj result (quot remaining power))})]
+    (if (zero? n)
+        [0]
+        (:result (reduce update-payload initial-payload powers)))))
+
+(= [1 2 3 4 5 0 1] (digits-and-bases 1234501 10))
+(= [0] (digits-and-bases 0 11))
+(= [1 0 0 1] (digits-and-bases 9 2))
+(= [1 0] (let [n (rand-int 100000)](digits-and-bases n n)))
+(= [16 18 5 24 15 1] (digits-and-bases Integer/MAX_VALUE 42))

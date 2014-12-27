@@ -474,3 +474,23 @@
 (= [1 0 0 1] (digits-and-bases 9 2))
 (= [1 0] (let [n (rand-int 100000)](digits-and-bases n n)))
 (= [16 18 5 24 15 1] (digits-and-bases Integer/MAX_VALUE 42))
+
+
+;; identify-keys-and-values
+
+;; Given an input sequence of keywords and numbers, create a map such that each key in the map is a keyword,
+;; and the value is a sequence of all the numbers (if any) between it and the next keyword in the sequence.
+
+(defn identify-keys-and-values [[x & xs]]
+  (if x
+      (assoc
+        (identify-keys-and-values (drop-while number? xs))
+        x
+        (take-while number? xs))
+      {}))
+
+(= {} (identify-keys-and-values []))
+(= {:a [1]} (identify-keys-and-values [:a 1]))
+(= {:a [1], :b [2]} (identify-keys-and-values [:a 1, :b 2]))
+(= {:a [1 2 3], :b [], :c [4]} (identify-keys-and-values [:a 1 2 3 :b :c 4]))
+

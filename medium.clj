@@ -501,12 +501,41 @@
 ;; Write a function which takes an integer n, as its only argument, and returns an increasing lazy sequence of
 ;; all palindromic numbers that are not less than n. The most simple solution will exceed the time limit!
 
-(defn palindromic-numbers [n]
+;; the function below works, but is too inefficient
+#_(defn palindromic-numbers [n]
   (letfn [(palindrome? [xs] (= (-> xs str seq) (-> xs str seq reverse)))
           (up-range [n] (map #(+ n %) (range)))]
   (filter palindrome? (up-range n))))
 
-;; work in progress
+
+(defn parse [n]
+  (->> (clojure.string/split (str n) #"")
+       (map #(Integer/parseInt %))))
+
+(parse 1234)
+
+(mirrors (parse 12345))
+(defn mirrors [xs]
+  (map-indexed
+    (fn [i k]
+      [(nth xs (-> (- i) dec (mod 5))) k])
+    xs))
+
+
+
+12345 -> 12350 -> 12351 -> 12401 -> 12421
+
+12345 -> 54321 ;; reverse it
+54321 -> [(5 1) (4 2) (3 3)] ;;
+
+
+-> start with rightmost
+-> compare with it's mirror
+   -> if less, match it
+   -> if more, set to zero and inc left, then match it's mirror
+-> move in by one and repeat until center is reached
+
+
 
 (=  (take 26  (palindromic-numbers 0))
       [0 1 2 3 4 5 6 7 8 9

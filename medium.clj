@@ -501,65 +501,43 @@
 ;; Write a function which takes an integer n, as its only argument, and returns an increasing lazy sequence of
 ;; all palindromic numbers that are not less than n. The most simple solution will exceed the time limit!
 
-;; the function below works, but is too inefficient
-#_(defn palindromic-numbers [n]
-  (letfn [(palindrome? [xs] (= (-> xs str seq) (-> xs str seq reverse)))
-          (up-range [n] (map #(+ n %) (range)))]
-  (filter palindrome? (up-range n))))
-
-
-(defn parse [n]
-  (->> (clojure.string/split (str n) #"")
-       (map #(Integer/parseInt %))))
-
-(parse 1234)
-
-(mirrors (parse 12345))
-(defn mirrors [xs]
-  (map-indexed
-    (fn [i k]
-      [(nth xs (-> (- i) dec (mod 5))) k])
-    xs))
-
-
-
-12345 -> 12350 -> 12351 -> 12401 -> 12421
-
-12345 -> 54321 ;; reverse it
-54321 -> [(5 1) (4 2) (3 3)] ;;
-
-
--> start with rightmost
--> compare with it's mirror
-   -> if less, match it
-   -> if more, set to zero and inc left, then match it's mirror
--> move in by one and repeat until center is reached
-
-
+(defn palindromic-numbers [k]
+  (let [sequify (fn [n] (->> n str seq (map str) (map read-string)))
+        indices (fn [n] (-> n sequify count (/ 2) int range))
+        mirrorize (fn [n i]
+                    (let [seq-n (sequify n)
+                          a (nth seq-n i)
+                          b (nth (reverse seq-n) i)
+                          factor (reduce * 1 (repeat i 10))
+                          offset (mod (- a b) 10)]
+                      (+ n (* offset factor))))
+        palindromize (fn [n] (reduce #(mirrorize %1 %2) n (indices n)))
+        next-palindrome (fn [n] (-> (palindromize (inc n)) (palindromize)))]
+    (rest (iterate next-palindrome (dec k)))))
 
 (=  (take 26  (palindromic-numbers 0))
-      [0 1 2 3 4 5 6 7 8 9
-           11 22 33 44 55 66 77 88 99
-               101 111 121 131 141 151 161])
+   [0 1 2 3 4 5 6 7 8 9
+    11 22 33 44 55 66 77 88 99
+    101 111 121 131 141 151 161])
 
 (=  (take 16  (palindromic-numbers 162))
-      [171 181 191 202
-           212 222 232 242
-               252 262 272 282
-                   292 303 313 323])
+   [171 181 191 202
+    212 222 232 242
+    252 262 272 282
+    292 303 313 323])
 
 (=  (take 6  (palindromic-numbers 1234550000))
-      [1234554321 1234664321 1234774321
-           1234884321 1234994321 1235005321])
+   [1234554321 1234664321 1234774321
+    1234884321 1234994321 1235005321])
 
 (=  (first  (palindromic-numbers  (* 111111111 111111111)))
-      (* 111111111 111111111))
+   (* 111111111 111111111))
 
 (=  (set  (take 199  (palindromic-numbers 0)))
-      (set  (map #(first  (palindromic-numbers %))  (range 0 10000))))
+   (set  (map #(first  (palindromic-numbers %))  (range 0 10000))))
 
 (= true
-      (apply <  (take 6666  (palindromic-numbers 9999999))))
+   (apply <  (take 6666  (palindromic-numbers 9999999))))
 
 (=  (nth  (palindromic-numbers 0) 10101)
-      9102019)
+   9102019)

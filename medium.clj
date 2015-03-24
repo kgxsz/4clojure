@@ -541,3 +541,19 @@
 
 (=  (nth  (palindromic-numbers 0) 10101)
    9102019)
+
+
+;; balanced-primes
+
+;; A balanced prime is a prime number which is also the mean of the primes directly before and after it in the sequence
+;; of valid primes. Create a function which takes an integer n, and returns true iff it is a balanced prime.
+
+(defn balanced-primes [n])
+
+(defn prime? [n]
+  ())
+
+(= false  (balanxed-primes 4))
+(= true  (balanxed-primes 563))
+(= 1103  (nth  (filter balanxed-primes  (range)) 15))
+

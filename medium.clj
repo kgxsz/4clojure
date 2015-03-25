@@ -548,12 +548,31 @@
 ;; A balanced prime is a prime number which is also the mean of the primes directly before and after it in the sequence
 ;; of valid primes. Create a function which takes an integer n, and returns true iff it is a balanced prime.
 
-(defn balanced-primes [n])
+(defn balanced-primes [n]
+  )
+
+(defn next-prime? [n]
+  (first (filter prime? (map #(+ 1 n %) (range)))))
 
 (defn prime? [n]
-  ())
+  (->> (range 2 n)
+       (map #(mod n %))
+       (not-any? zero?)))
 
-(= false  (balanxed-primes 4))
-(= true  (balanxed-primes 563))
-(= 1103  (nth  (filter balanxed-primes  (range)) 15))
+
+((juxt pos? odd?) 2)
+(every? true? [true true])
+(and true false true)
+
+(prime? 1)
+(prime? 2)
+(prime? 3)
+(prime? 4)
+(balanced-primes 563)
+
+(prime? 557)
+
+(= false  (balanced-primes 4))
+(= true  (balanced-primes 563))
+(= 1103  (nth  (filter balanced-primes  (range)) 15))
 

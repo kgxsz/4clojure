@@ -549,28 +549,17 @@
 ;; of valid primes. Create a function which takes an integer n, and returns true iff it is a balanced prime.
 
 (defn balanced-primes [n]
-  )
-
-(defn next-prime? [n]
-  (first (filter prime? (map #(+ 1 n %) (range)))))
-
-(defn prime? [n]
-  (->> (range 2 n)
-       (map #(mod n %))
-       (not-any? zero?)))
-
-
-((juxt pos? odd?) 2)
-(every? true? [true true])
-(and true false true)
-
-(prime? 1)
-(prime? 2)
-(prime? 3)
-(prime? 4)
-(balanced-primes 563)
-
-(prime? 557)
+  (let [mean #(/ (+ %1 %2) 2)
+        prime? (fn [n]
+                 (and
+                   (> n 1)
+                   (->> (range 2 n)
+                        (map #(mod n %))
+                        (not-any? zero?))))
+        first-prime #(first (filter prime? %))
+        next-prime (fn [n] ( first-prime (map #(+ % n 1) (range))))
+        prev-prime #(first-prime (range (dec %) 0 -1))]
+  (and (prime? n) (> n 2) (= n (mean (prev-prime n) (next-prime n))))))
 
 (= false  (balanced-primes 4))
 (= true  (balanced-primes 563))

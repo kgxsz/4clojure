@@ -163,7 +163,8 @@
     (= l (mirror r))))
 
 (defn group-a-sequence [f xs]
-  (->> (map hash-map (map f xs) xs)
+  (group-by f xs)
+  #_(->> (map hash-map (map f xs) xs)
        (apply merge-with vector)))
 
 (defn read-a-binary-number [xs]

@@ -66,18 +66,11 @@
   (is (= (last-element '(5 4 3)) 3))
   (is (= (last-element ["b" "c" "d"]) "d")))
 
+(deftest test-compress-a-sequence
+  (is (= (apply str (compress-a-sequence "Leeeeeerrroyyy")) "Leroy"))
+  (is (= (compress-a-sequence [1 1 2 3 3 2 2 3]) '(1 2 3 2 3)))
+  (is (= (compress-a-sequence [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))))
 
-; ; compress-a-sequence
-;
-; ; Write a function which removes consecutive duplicates from a sequence.
-;
-; (deftest test-compress-a-sequence
-;   (map first (partition-by #(identity %) xs)))
-;
-; (is (= (apply str (compress-a-sequence "Leeeeeerrroyyy")) "Leroy"))
-; (is (= (compress-a-sequence [1 1 2 3 3 2 2 3]) '(1 2 3 2 3)))
-; (is (= (compress-a-sequence [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2])))
-;
 ;
 ; ; interleave-two-sequences
 ;

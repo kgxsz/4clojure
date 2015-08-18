@@ -47,18 +47,9 @@
 (defn last-element [collection]
   (first (reverse collection)))
 
-; ; compress-a-sequence
-;
-; ; Write a function which removes consecutive duplicates from a sequence.
-;
-; (defn compress-a-sequence [xs]
-;   (map first (partition-by #(identity %) xs)))
-;
-;
-;
-;
-;
-;
+(defn compress-a-sequence [xs]
+  (map first (partition-by #(identity %) xs)))
+
 ; ; interleave-two-sequences
 ;
 ; ; Write a function which takes two sequences and returns the first item from each, then the second item from each, then the third, etc.

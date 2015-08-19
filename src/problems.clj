@@ -162,9 +162,10 @@
     (= l (mirror r))))
 
 (defn group-a-sequence [f xs]
-  (group-by f xs)
-  #_(->> (map hash-map (map f xs) xs)
-         (apply merge-with vector)))
+  (let [ms (map hash-map (map f xs) xs)
+        im (map (comp first keys) ms)]
+    (->> (cons (zipmap im (repeat [])) ms)
+         (apply merge-with conj))))
 
 (defn read-a-binary-number [xs]
   (->> (reverse (seq xs))
